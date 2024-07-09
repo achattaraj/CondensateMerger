@@ -1,0 +1,15 @@
+tolerance  5
+seed       457
+
+filetype xyz
+output  IC_tmp.xyz
+
+structure polyA_n5_mono.xyz
+	number 100
+	inside box  -240.0  -240.0 -240.0  240.0 240.0 240.0
+end structure
+
+structure polyB_n5_mono.xyz
+	number 100
+	inside box  -240.0  -240.0 -240.0  240.0 240.0 240.0
+end structure

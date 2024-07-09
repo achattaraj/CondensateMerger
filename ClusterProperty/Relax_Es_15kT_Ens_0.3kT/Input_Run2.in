@@ -1,0 +1,71 @@
+variable T equal 310 
+
+variable seed equal 644796
+
+variable fName string Run2_S15N03_rlx
+
+log ${fName}.log
+
+units           real
+boundary p p p
+atom_style      full
+
+read_restart final_state_Relax_Es_15kT_Ens_0.3kT.restart 
+
+change_box all x final -500.0 500.0 y final -500.0 500.0 z final -500.0 500.0 
+
+neighbor 1.9 bin
+neigh_modify every 1 delay 1 check yes 
+
+angle_style  cosine
+angle_coeff   *  2  # K (energy unit) 
+
+bond_style 		 hybrid harmonic harmonic/shift/cut
+bond_coeff   1   harmonic 3   10  
+bond_coeff   2   harmonic 3   10 
+bond_coeff   3   harmonic/shift/cut 8.883   11.22   12.72 
+
+pair_style lj/cut 25
+
+pair_coeff  * * 0.178 10 25 
+
+special_bonds lj  0 1 1 angle yes
+
+variable t equal step
+variable steps equal 100000000
+variable dt_thermo equal 1000000
+variable dt_movie equal 5000000  
+variable dt_restart equal 10000000
+
+group rxnSites type 1 3
+
+# fix ID group-ID(atom-types) bond/create Nevery itype jtype Rmin bondtype (prob values = fraction seed) (iparam maxbond newType)
+fix bondc rxnSites bond/create/random 20 1 3 12.72 3 prob 1 ${seed} iparam 1 1 jparam 1 3
+
+# fix ID group-ID bond/break Nevery bondtype Rmax keyword values ...
+fix bondbr rxnSites bond/break 20 3 12.72 prob 1 ${seed}
+
+variable frmbnd equal f_bondc[2] 
+variable brkbnd equal f_bondbr[2] 
+fix saveBond all print ${dt_thermo} "$t ${frmbnd} ${brkbnd}" file BondData_${fName}.dat screen no
+
+thermo_style    custom step epair pe ke ebond eangle temp bonds 
+thermo          ${dt_thermo}
+fix saveThermo all print ${dt_thermo} "$t $(temp) $(ke) $(pe) $(epair) $(ebond) $(eangle) $(bonds)" file Thermo_${fName}.dat title "# Steps Temp KinEng PotEng Epair Ebond Eangle Bonds" screen no
+
+############################ Langevin Dynamics ###############################
+fix fxlan all langevin $T $T 500 ${seed}
+fix fxnve all nve 
+
+comm_style tiled
+fix fxbal all balance 1000 1.1 rcb # load balance for spatially heterogeneous system
+
+timestep 30
+
+dump coor all custom ${dt_movie} traj_${fName}.dump id type mol mass x y z xu yu zu 
+
+restart ${dt_restart} ${fName}_tp_*.restart
+run ${steps}
+
+write_restart final_state_${fName}.restart
+write_data final_state_${fName}.DATA

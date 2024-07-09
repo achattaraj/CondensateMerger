@@ -1,0 +1,12 @@
+import "polyA_n5.lt" 
+import "polyB_n5.lt" 
+
+p1 = new polyA_n5[100]
+p2 = new polyB_n5[100]
+
+write_once("Data Boundary")
+{
+-250.0 250.0 xlo xhi
+-250.0 250.0 ylo yhi
+-250.0 250.0 zlo zhi
+}
