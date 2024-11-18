@@ -30,5 +30,6 @@ Input script for running Langevin Dynamics simulations using LAMMPS. Here we are
 
 - Generate detailed logs  **(${fName}.log)** and system thermodynamics reports **(Thermo_${fName}.dat)** 
 - Periodically dump coordinates **(traj_${fName}.dump)** for trajectory visualization
-- **BondData_${fName}.dat** tracks bond formations and breaks.
-- Execute balance and communication management to optimize parallel computation load
+- **BondData_${fName}.dat** tracks bond formations and breaks
+- Periodically dump restart files **(${fName}_*.restart)** to save system's configurations which can be used to analyze the cluster topology 
+- Execute balance (**comm_style tiled** and **fix balance**) and communication management to optimize parallel computation load
