@@ -1,6 +1,6 @@
 ## Dynamic bond (crosslink) formation between sticker-spacer polymer chains in LAMMPS
 
-This repository is part of the study - **"Separation of sticker-spacer energetics governs the coalescence of metastable biomolecular condensates"**. It contains files used to setup simulations and analyze the data.
+This repository is part of the [study](https://www.cell.com/biophysj/fulltext/S0006-3495(24)04098-0) - **"Separation of sticker-spacer energetics governs the coalescence of metastable biomolecular condensates"**. It contains files used to setup simulations and analyze the data.
 
 The repository is organized in order of the simulation pipeline: 
 
